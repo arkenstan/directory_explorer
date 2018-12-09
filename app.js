@@ -1,9 +1,12 @@
 const fs = require('fs');
 const readline = require('readline');
-const util = require('util');
 const { syntaxParser, parser, outputWriter } = require('./helpers');
 const services = require('./services');
 
+/**
+ *
+ * @param {*} commands
+ */
 function executeCommands(commands) {
   let structure = { root: { id: 'a', name: 'root', type: 'dir', components: [] } };
   for (let command of commands) {
@@ -18,12 +21,16 @@ function executeCommands(commands) {
     } catch (e) {
       return { passed: false, op: command };
     }
+    if (!structure['root']) {
+      structure = { root: { id: 'a', name: 'root', type: 'dir', components: [] } };
+    }
   }
 
   return { passed: true, op: structure };
 }
 
 /**
+ *
  */
 function readInputFile() {
   let commands = [];
@@ -49,10 +56,12 @@ function readInputFile() {
 
   lineReader.on('syntax_error', function(line) {
     console.log('Invalid Syntax:', line);
+    outputWriter(false, { cmd: line });
   });
 
   lineReader.on('parser_error', function(line) {
     console.log('Unable to Parse:', line);
+    outputWriter(false, { cmd: line });
   });
 
   lineReader.on('close', function() {
@@ -61,6 +70,9 @@ function readInputFile() {
   });
 }
 
+/**
+ *
+ */
 function main() {
   try {
     readInputFile();

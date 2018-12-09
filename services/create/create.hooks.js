@@ -1,5 +1,5 @@
-const { ifExists, typeCheck } = require('../../hooks');
+const { ifExists, typeCheck, checkUnique } = require('../../hooks');
 module.exports = {
-  before: [ifExists, typeCheck],
+  before: [ifExists, typeCheck, checkUnique],
   after: []
 };

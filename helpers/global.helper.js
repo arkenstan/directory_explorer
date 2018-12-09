@@ -22,12 +22,25 @@ function moveParsing(temp, cmd) {
 }
 
 /**
+ *
  * @param {*} passed
  * @param {*} op
  */
 function output(passed, op) {
   if (passed) {
     let finalTree = {};
+
+    const accessDirs = (node, spacer) => {
+      let temp = '';
+      for (let dir of node.dirs) {
+        temp = accessDirs(finalTree[dir], `${spacer}  `);
+      }
+      let dirStr =
+        node.dirs.length > 0 ? `${spacer}dir ${node.dirs.join(`\n${spacer}dir `)}\n` : ``;
+      let itemStr =
+        node.items.length > 0 ? `${spacer}item ${node.items.join(`\n${spacer}item `)}\n` : ``;
+      return dirStr + temp + itemStr;
+    };
 
     for (let element in op) {
       if (op[element].type == 'dir') {
@@ -42,15 +55,14 @@ function output(passed, op) {
       }
     }
 
-    let finalOutput = 'root\n',
-      spacer = '  ';
-    for (let dir of finalTree['root'].dirs) {
-      finalOutput += `${spacer}${dir}\n`;
-      for (let childDir of finalTree[dir].dirs) {
-      }
-    }
+    let outputString = 'root\n' + accessDirs(finalTree['root'], '  ');
 
-    console.log(finalTree);
+    fs.writeFileSync('output.txt', `${outputString}`, function(err, data) {
+      if (err) console.log(err);
+      console.log('Successfully written to file');
+    });
+
+    console.log(outputString);
   } else {
     fs.writeFileSync('output.txt', `failed ${op.cmd}`, function(err, data) {
       if (err) console.log(err);

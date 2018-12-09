@@ -1,4 +1,4 @@
-const { syntaxParser } = require('./analyzer.helper');
+const { syntaxParser } = require('./syntaxParser.helper');
 const { parser } = require('./commandParser.helper');
 const { pipe } = require('./pipeline.helper');
 const { idGenerator } = require('./idGenerator.helper');
