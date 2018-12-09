@@ -1,17 +1,20 @@
-const { pipeline } = require('../../helpers');
+const { pipe, idGenerator } = require('../../helpers');
 const hooks = require('./create.hooks');
 
 function serviceLogic(context) {
   const { command } = context;
   let source = command.optionArgs[1] || 'root';
   let target = command.optionArgs[0];
+  let { id, components } = context.structure[source];
   let temp = {
+    name: target,
     type: command.option,
-    parent: source
+    parent: source,
+    id: idGenerator(id, command.option, components.length)
   };
-  temp = command.option == 'dir' ? { ...temp, dir: [], item: [] } : temp;
+  temp = command.option === 'dir' ? { ...temp, components: [] } : temp;
 
-  context.structure[temp.parent][command.option].push(target);
+  context.structure[temp.parent].components.push(target);
   context.structure[target] = { ...temp };
 
   return context;
@@ -19,11 +22,15 @@ function serviceLogic(context) {
 
 let service = context => {
   try {
-    let output = pipeline(context, ...hooks.before, serviceLogic, ...hooks.after);
+    let output = pipe(
+      context,
+      ...hooks.before,
+      serviceLogic,
+      ...hooks.after
+    );
     return output;
   } catch (error) {
-    console.log(error);
-    return pipeline({ ...context, error }, ...hooks.error);
+    return false;
   }
 };
 

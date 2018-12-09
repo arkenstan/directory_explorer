@@ -1,4 +1,4 @@
-const { pipeline } = require('../../helpers');
+const { pipe, idGenerator } = require('../../helpers');
 const hooks = require('./move.hooks');
 
 /**
@@ -7,20 +7,34 @@ const hooks = require('./move.hooks');
  */
 function serviceLogic(context) {
   const { command, structure } = context;
-  let target = command.optionArgs[0];
-  let parent = structure[target].parent;
-  let destination = command.optionArgs[1];
 
-  let indexElement = structure[parent][command.option].indexOf(target);
-  if (indexElement == -1) {
-    throw new Error('Unable to find item');
-  } else {
-    context.structure[parent][command.option].splice(indexElement, 1);
-    context.structure[target].parent = destination;
+  // Process Move
+  let targetObj = structure[command.optionArgs[0]];
+  let destinationObj = structure[command.optionArgs[1]];
+  let parentObj = structure[targetObj.parent];
+
+  let newId = idGenerator(destinationObj.id, command.option, destinationObj.components.length);
+  context.structure[targetObj.name].parent = destinationObj.name;
+  context.structure[targetObj.name].id = newId;
+  context.structure[parentObj.name].components.splice(
+    parentObj.components.indexOf(targetObj.name),
+    1
+  );
+
+  if (command.option === 'dir') {
+    let moveRegex = new RegExp(targetObj.id, 'g');
+    for (let element in structure) {
+      if (structure[element].id.search(moveRegex) !== -1) {
+        context.structure[element].id = structure[element].id.replace(moveRegex, newId);
+      }
+    }
   }
 
-  if (command.flag && command.flagCalc) {
-    context.structure[destination][command.option].splice(command.flagCalc, 0, target);
+  // Process Flag
+  if (command.flag && command.flagCalc !== -1) {
+    context.structure[destinationObj.name].components.splice(command.flagCalc, 0, targetObj.name);
+  } else {
+    context.structure[destinationObj.name].components.push(targetObj.name);
   }
 
   return context;
@@ -28,11 +42,15 @@ function serviceLogic(context) {
 
 let service = context => {
   try {
-    let output = pipeline(context, ...hooks.before, serviceLogic, ...hooks.after, ...hooks.error);
+    let output = pipe(
+      context,
+      ...hooks.before,
+      serviceLogic,
+      ...hooks.after
+    );
     return output;
   } catch (error) {
-    console.log(error);
-    return pipeline({ ...context, error }, ...hooks.error);
+    return false;
   }
 };
 

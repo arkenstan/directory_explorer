@@ -1,21 +1,34 @@
-const pipe = (...fns) =>
-  fns.length === 1
+/**
+ *
+ * @param {*} acc
+ * @param {*} curr
+ * @param {*} ind
+ */
+function pipeGenerator(acc, curr, ind) {
+  if (ind === 1 && acc && acc.constructor === Function) {
+    let executed = acc();
+    if (executed && executed.then) {
+      return executed.then(acc => curr(acc));
+    } else {
+      return curr(acc);
+    }
+  } else if (acc && acc.then) {
+    return acc.then(curr => curr(acc));
+  } else {
+    return curr(acc);
+  }
+}
+
+/**
+ *
+ * @param  {...any} fns
+ */
+const pipe = function(...fns) {
+  return fns.length === 1
     ? fns[0].constructor === Function
       ? fns[0]()
       : fns[0]
-    : fns.reduce((a, c, i) => {
-        if (i === 1 && a && a.constructor === Function) {
-          let exec = a();
-          if (exec && exec.then) {
-            return exec.then(a => c(a));
-          } else {
-            return c(a);
-          }
-        } else if (a && a.then) {
-          return a.then(c => c(a));
-        } else {
-          return c(a);
-        }
-      });
+    : fns.reduce(pipeGenerator);
+};
 
-module.exports = pipe;
+module.exports = { pipe, pipeGenerator };

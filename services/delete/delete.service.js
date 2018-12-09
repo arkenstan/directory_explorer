@@ -1,4 +1,4 @@
-const { pipeline } = require('../../helpers');
+const { pipe } = require('../../helpers');
 const hooks = require('./delete.hooks');
 
 /**
@@ -7,26 +7,35 @@ const hooks = require('./delete.hooks');
  */
 function serviceLogic(context) {
   const { command, structure } = context;
-  let target = command.optionArgs[0];
-  let parent = structure[target].parent;
-
-  let indexElement = structure[parent][command.option].indexOf(target);
-  if (indexElement == -1) {
-    throw new Error('Unable to find item');
+  let targetName = command.optionArgs[0];
+  let targetObj = structure[command.optionArgs[0]];
+  let parentName = targetObj.parent;
+  let idRegex = new RegExp(targetObj.id, 'g');
+  if (command.option === 'dir') {
+    for (let element in structure) {
+      if (structure[element].id.search(idRegex) !== -1) {
+        delete context.structure[element];
+      }
+    }
   } else {
-    context.structure[parent][command.option].splice(indexElement, 1);
-    delete context.structure[target];
+    delete context.structure[targetName];
   }
+  context.structure[parentName].components.splice(indexElement, 1);
   return context;
 }
 
-let service = context => {
+let service = function(context) {
   try {
-    let output = pipeline(context, ...hooks.before, serviceLogic, ...hooks.after, ...hooks.error);
+    let output = pipe(
+      context,
+      ...hooks.before,
+      serviceLogic,
+      ...hooks.after,
+      ...hooks.error
+    );
     return output;
   } catch (error) {
-    console.log(error);
-    return pipeline({ ...context, error }, ...hooks.error);
+    return false;
   }
 };
 

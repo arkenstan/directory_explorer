@@ -3,7 +3,7 @@ const deleteService = require('./delete/delete.service');
 const moveService = require('./move/move.service');
 
 module.exports = {
-  createService,
-  deleteService,
-  moveService
+  create: createService,
+  delete: deleteService,
+  move: moveService
 };

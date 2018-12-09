@@ -1,5 +1,7 @@
-const analyzer = require('./analyzer.helper');
-const commandParser = require('./commandParser.helper');
-const pipeline = require('./pipeline.helper');
+const { syntaxParser } = require('./analyzer.helper');
+const { parser } = require('./commandParser.helper');
+const { pipe } = require('./pipeline.helper');
+const { idGenerator } = require('./idGenerator.helper');
+const { parsing, outputWriter } = require('./global.helper');
 
-module.exports = { analyzer, commandParser, pipeline };
+module.exports = { syntaxParser, parser, pipe, idGenerator, parsing, outputWriter };

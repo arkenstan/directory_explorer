@@ -1,38 +1,28 @@
 const fs = require('fs');
 const readline = require('readline');
 const util = require('util');
-const { analyzer, commandParser } = require('./helpers');
-const { createService, deleteService, moveService } = require('./services');
-
-// let structure = [{ name: 'root', type: 'dir', components: [] }];
-let structure = { root: { type: 'dir', item: [], dir: [] } };
-// let commands = [];
+const { syntaxParser, parser, outputWriter } = require('./helpers');
+const services = require('./services');
 
 function executeCommands(commands) {
+  let structure = { root: { id: 'a', name: 'root', type: 'dir', components: [] } };
   for (let command of commands) {
-    let context = { structure, command };
-    switch (command.type) {
-      case 'create':
-        context = createService(context);
+    try {
+      let context = services[command.type]({ structure, command });
+
+      if (context) {
         structure = context.structure;
-        break;
-      case 'delete':
-        context = deleteService(context);
-        structure = context.structure;
-        break;
-      case 'move':
-        context = moveService(context);
-        structure = context.structure;
-        break;
-      default:
-        break;
+      } else {
+        return { passed: false, op: command };
+      }
+    } catch (e) {
+      return { passed: false, op: command };
     }
   }
 
-  console.log(util.inspect(structure, false, null, true));
-
-  return 'commands';
+  return { passed: true, op: structure };
 }
+
 /**
  */
 function readInputFile() {
@@ -42,32 +32,41 @@ function readInputFile() {
   });
 
   lineReader.on('line', function(line) {
-    let analyzedResult = analyzer(line);
-    if (!analyzedResult) {
-      lineReader.emit('analyzer_error', line);
-      lineReader.close();
-    } else {
-      let commandObject = commandParser(line);
+    let analyzedResult = syntaxParser(line);
+    if (analyzedResult) {
+      let commandObject = parser(line);
       if (commandObject) {
         commands.push(commandObject);
       } else {
-        lineReader.emit('analyzer_error', line);
+        lineReader.emit('parse_error', line);
         lineReader.close();
       }
+    } else {
+      lineReader.emit('syntax_error', line);
+      lineReader.close();
     }
   });
 
-  lineReader.on('analyzer_error', function(line) {
-    console.log('INVALID COMMAND:', line);
+  lineReader.on('syntax_error', function(line) {
+    console.log('Invalid Syntax:', line);
+  });
+
+  lineReader.on('parser_error', function(line) {
+    console.log('Unable to Parse:', line);
   });
 
   lineReader.on('close', function() {
-    console.log(executeCommands(commands));
+    let output = executeCommands(commands);
+    outputWriter(output.passed, output.op);
   });
 }
 
 function main() {
-  readInputFile();
+  try {
+    readInputFile();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 main();
