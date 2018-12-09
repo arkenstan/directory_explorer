@@ -1,11 +1,1 @@
-root
-  dir fruits
-    dir test1
-      dir test2
-        dir test3
-          dir test4
-            item mango
-        item orange
-    item apple
-  item chocolate
-  item caramel
+failed create item caramel chocolate

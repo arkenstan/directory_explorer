@@ -1,10 +1,2 @@
 create item chocolate
-create item caramel
-create dir fruits
-create dir test1 fruits
-create dir test2 test1
-create dir test3 test2
-create dir test4 test3
-create item apple fruits
-create item orange test2
-create item mango test4
+create item caramel chocolate

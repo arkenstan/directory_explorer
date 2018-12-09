@@ -7,9 +7,8 @@ const hooks = require('./delete.hooks');
  */
 function serviceLogic(context) {
   const { command, structure } = context;
-  let targetName = command.optionArgs[0];
   let targetObj = structure[command.optionArgs[0]];
-  let parentName = targetObj.parent;
+  let parentObj = structure[targetObj.parent];
   let idRegex = new RegExp(targetObj.id, 'g');
   if (command.option === 'dir') {
     for (let element in structure) {
@@ -18,9 +17,10 @@ function serviceLogic(context) {
       }
     }
   } else {
-    delete context.structure[targetName];
+    delete context.structure[targetObj.name];
   }
-  context.structure[parentName].components.splice(indexElement, 1);
+  elementIndex = parentObj.components.indexOf(targetObj.name);
+  context.structure[parentObj.name].components.splice(elementIndex, 1);
   return context;
 }
 
@@ -30,11 +30,11 @@ let service = function(context) {
       context,
       ...hooks.before,
       serviceLogic,
-      ...hooks.after,
-      ...hooks.error
+      ...hooks.after
     );
     return output;
   } catch (error) {
+    console.log(error);
     return false;
   }
 };

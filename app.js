@@ -33,7 +33,8 @@ function executeCommands(commands) {
  *
  */
 function readInputFile() {
-  let commands = [];
+  let commands = [],
+    error = false;
   const lineReader = readline.createInterface({
     input: fs.createReadStream('input.txt')
   });
@@ -46,27 +47,29 @@ function readInputFile() {
         commands.push(commandObject);
       } else {
         lineReader.emit('parse_error', line);
-        lineReader.close();
       }
     } else {
       lineReader.emit('syntax_error', line);
-      lineReader.close();
     }
   });
 
   lineReader.on('syntax_error', function(line) {
+    error = true;
     console.log('Invalid Syntax:', line);
     outputWriter(false, { cmd: line });
   });
 
   lineReader.on('parser_error', function(line) {
+    error = true;
     console.log('Unable to Parse:', line);
     outputWriter(false, { cmd: line });
   });
 
-  lineReader.on('close', function() {
-    let output = executeCommands(commands);
-    outputWriter(output.passed, output.op);
+  lineReader.on('close', function(dangle) {
+    if (!error) {
+      let output = executeCommands(commands);
+      outputWriter(output.passed, output.op);
+    }
   });
 }
 

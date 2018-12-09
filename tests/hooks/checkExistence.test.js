@@ -31,8 +31,9 @@ describe('Check existence hook', function() {
   });
   describe('check for delete command', function() {
     it(`Should throw an error`, function() {
-      const result = ifExists({ structure, command: commandDelete });
-      assert.throws(result, `Doesn't Exist`);
+      assert.throws(function() {
+        ifExists({ structure, command: commandDelete });
+      }, `Doesn't Exist`);
     });
   });
 });
