@@ -1,3 +1,8 @@
+/**
+ * Function checks for uniqueness of
+ * provided component
+ * @param  { structure, command } context
+ */
 module.exports = function(context) {
   const { command } = context;
 

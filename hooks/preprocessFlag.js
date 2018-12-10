@@ -1,3 +1,8 @@
+/**
+ * Function is used to preprocess the
+ * flag variable for move command if set
+ * @param  { structure, command } context
+ */
 module.exports = function(context) {
   const { command, structure } = context;
 

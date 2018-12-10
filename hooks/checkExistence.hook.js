@@ -1,3 +1,8 @@
+/**
+ * This Hook will check if component provided
+ * in command exists or not
+ * @param { structure, command } context
+ */
 module.exports = function(context) {
   const { structure, command } = context;
   if (command.type === 'create') {

@@ -1,3 +1,8 @@
+/**
+ * Function check if component provided is correct
+ * as required by delete & move
+ * @param  { structure, command } context
+ */
 module.exports = function(context) {
   const { structure, command } = context;
   if (command.type === 'create') {
