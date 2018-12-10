@@ -31,15 +31,16 @@ function output(passed, op) {
     let finalTree = {};
 
     const accessDirs = (node, spacer) => {
-      let temp = '';
+      let glob = '',
+        temp = '';
       for (let dir of node.dirs) {
         temp = accessDirs(finalTree[dir], `${spacer}  `);
+        glob += `${spacer}dir ${dir}\n${temp}`;
       }
-      let dirStr =
-        node.dirs.length > 0 ? `${spacer}dir ${node.dirs.join(`\n${spacer}dir `)}\n` : ``;
       let itemStr =
         node.items.length > 0 ? `${spacer}item ${node.items.join(`\n${spacer}item `)}\n` : ``;
-      return dirStr + temp + itemStr;
+      let temp2 = glob + itemStr;
+      return temp2;
     };
 
     for (let element in op) {

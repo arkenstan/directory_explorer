@@ -20,7 +20,7 @@ function pipeGenerator(acc, curr, ind) {
 }
 
 /**
- *
+ * Function generates a pipeline for functions
  * @param  {...any} fns
  */
 const pipe = function(...fns) {

@@ -1,7 +1,7 @@
 const { parsing } = require('./global.helper');
 /**
- *
- * @param {*} cmd
+ * Function parses the given command to a desired format
+ * @param {*} cmd command is given as an input
  */
 const parser = function(cmd) {
   let temp = {
