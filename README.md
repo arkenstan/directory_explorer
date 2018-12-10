@@ -8,18 +8,14 @@ Project take input from **_input.txt_** located in root directory and provides a
 
 **Running the project**
 
-> npm install
-> npm start
+> npm install<br> npm start
 
 **Running the tests**
 
-> npm install
-> npm test
+> npm install <br> npm test
 
 ## Project information
 
 **Command types**
 
-> create <option:dir|item> arg [optional:arg2]
-> delete <option:dir|item> deleteArg
-> move <option:dir|item> selectArg moveTo <flag:before|after> flagItem
+> **create** option[dir|item] arg arg2[optional]<br> **delete** option[dir|item] deleteArg<br> **move** option[dir|item] selectArg moveTo flag[before|after] flagItem
