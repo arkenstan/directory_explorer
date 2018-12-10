@@ -1,7 +1,12 @@
 {
   "name": "directory_system",
   "version": "0.0.1",
-  "description": "",
+  "description": "Project is design to simulate a directory system",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arkenstan/directory_system"
+  },
+  "homepage": "https://github.com/arkenstan/directory_system/blob/master/README.md",
   "main": "app.js",
   "scripts": {
     "start": "node app",
