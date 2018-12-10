@@ -4,8 +4,8 @@ const { syntaxParser, parser, outputWriter } = require('./helpers');
 const services = require('./services');
 
 /**
- *
- * @param {*} commands
+ * Function will start to execute commands one by one
+ * @param {*} commands list of commands
  */
 function executeCommands(commands) {
   let structure = { root: { id: 'a', name: 'root', type: 'dir', components: [] } };
@@ -30,7 +30,9 @@ function executeCommands(commands) {
 }
 
 /**
- *
+ * Function creates a line from readStream
+ * and apply syntax and grammar parsing to
+ * the command
  */
 function readInputFile() {
   let commands = [],
@@ -74,7 +76,7 @@ function readInputFile() {
 }
 
 /**
- *
+ * Function to manage application
  */
 function main() {
   try {
