@@ -1,2 +1,18 @@
-create item chocolate
-create item caramel chocolate
+create dir fruits
+create dir juicy fruits
+create dir vegetables
+create dir chocolate
+create dir leafy vegetables
+create item tomato
+create item potato
+create item orange
+create item spinach
+create item banana juicy
+move item tomato fruits
+move item potato vegetables
+move item orange fruits after tomato
+move item spinach leafy
+move item banana fruits
+move item orange juicy
+create item nuget chocolate
+move dir chocolate root before vegetables

@@ -1,1 +1,12 @@
-failed create item caramel chocolate
+root
+  dir fruits
+    dir juicy
+      item orange
+    item tomato
+    item banana
+  dir chocolate
+    item nuget
+  dir vegetables
+    dir leafy
+      item spinach
+    item potato
