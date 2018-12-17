@@ -1,12 +1,7 @@
 root
-  dir fruits
-    dir juicy
-      item orange
-    item tomato
-    item banana
-  dir chocolate
-    item nuget
-  dir vegetables
-    dir leafy
-      item spinach
-    item potato
+  dir fruits1
+    dir test
+    dir fruits2
+    dir test2
+    item chocolate2
+  item chocolate
