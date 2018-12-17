@@ -1,5 +1,5 @@
-const { ifExists, typeCheck, flagPreProcess } = require('../../hooks');
+const { ifExists, typeCheck, flagPreProcess, checkIfParent } = require('../../hooks');
 module.exports = {
-  before: [ifExists, typeCheck, flagPreProcess],
+  before: [ifExists, typeCheck, flagPreProcess, checkIfParent],
   after: []
 };
